@@ -19,18 +19,39 @@ iTable = NaN(n,2);
 minCost = Inf(n,2);
 isSettled = false(n,1);
 path = num2cell(NaN(n,1));
-I = start;
+if (start(1) == -1)
+    I = start(2);
+else
+    for i=1:size(g.NodeList,2)
+        if (size(g.NodeList(i).Transition,1) == 0)
+            continue;
+        end
+        idx_list = find(((g.NodeList(i).Transition(:,1)) == start(1)) .* ((g.NodeList(i).Transition(:,2) == start(2))));
+        if (size(idx_list,1) ~= 0)
+            break;
+        end
+    end
+    I = i;
+end
+
+if (finish(1) == -1)
+   finish = finish(2);
+else
+    for i=1:size(g.NodeList,2)
+        if (size(g.NodeList(i).Transition,1) == 0)
+            continue;
+        end
+        idx_list = find((g.NodeList(i).Transition(:,1) == finish(1)));
+    end
+    finish = idx_list(1);
+end
+
 minCost(I,:) = [0 0];
 iTable(I,:) = [0 0];
 isSettled(I) = true;
 path(I) = {I};
 
 isReverse = false;
-
-E
-
-cost_l
-cost_u
 
 
 while ~isSettled(finish)
@@ -44,7 +65,7 @@ while ~isSettled(finish)
     for kk = 1:length(nodeIndex)
         J = E(nodeIndex(kk),2);
         if ~isSettled(J)
-            c = [cost_l(I,J) cost_u(I,J)];
+            c = [cost_l(I,J) cost_u(I,J)] + g.NodeList(J).Cost;
             empty = isnan(jTable(J));
             if empty || (jTable(J,1) > (jTable(I,2) + c(2)))
                 iTable(J,:) = jTable(I,:) + c;
@@ -73,9 +94,9 @@ while ~isSettled(finish)
 end
 
 % Store costs and paths
-cost = minCost(finish,:)
-path{finish}
-fpath = path(finish);
+cost = minCost(finish,:);
+path{finish};
+fpath = path{finish};
 
 
 

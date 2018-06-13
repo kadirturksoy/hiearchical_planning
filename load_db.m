@@ -84,7 +84,8 @@ for j = 3:size(listing,1)
         t = [];
 
         for i=1:tn
-            t = [t line(count) line(count+1)];
+            t = [t; line(count) line(count+1) line(count+2)];
+            count = count + 1;
             count = count + 1;
             count = count + 1;
         end
@@ -136,3 +137,5 @@ for j = 3:size(listing,1)
     fclose(fileID);
     
 end
+
+g = h{1,2};
